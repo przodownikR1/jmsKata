@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	<jmxConfigurator />
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%.-1level|%-40.40logger{0}|%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>jmsKata.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n
+			</pattern>
+		</encoder>
+	</appender>
+	<logger name="pl.java.scalatech" level="info" />
+	<logger name="org.springframework" level="info" />
+	<logger name="org.springframework.data" level="warn" />
+	<logger name="org.springframework.security" level="info" />
+	<root level="info">
+		<appender-ref ref="console" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>
+a
