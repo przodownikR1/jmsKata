@@ -1,5 +1,7 @@
 package pl.java.scalatech.config;
 
+import javassist.tools.framedump;
+
 import javax.jms.ExceptionListener;
 import javax.jms.MessageListener;
 
@@ -99,8 +101,8 @@ public class JmsConfig {
     public QueueSender queueSender() {
         return new QueueSender(jmsTemplate(), queueName);
     }
-
-    private MessageListener queueListener() {
+    @Bean
+    public MessageListener queueListener() {
         return new QueueListener();
     }
 
@@ -111,6 +113,7 @@ public class JmsConfig {
         defaultMessageListenerContainer.setConcurrency(listenerContainerConcurrency);
         defaultMessageListenerContainer.setDestinationName(queueName);
         defaultMessageListenerContainer.setMessageListener(queueListener());
+        
         return defaultMessageListenerContainer;
     }
 

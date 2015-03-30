@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import pl.java.scalatech.audit.AuditableUser;
 import pl.java.scalatech.audit.MyAuditAwareImpl;
 
 @Configuration
@@ -15,7 +14,7 @@ import pl.java.scalatech.audit.MyAuditAwareImpl;
 @Slf4j
 public class AuditConfig {
     @Bean
-    public AuditorAware<AuditableUser> yourAuditorAwarebean() {
+    public AuditorAware<String> yourAuditorAwarebean() {
       log.info("+++  init audit");  
       return new MyAuditAwareImpl();
     }
