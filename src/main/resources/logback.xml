@@ -21,6 +21,8 @@
 	<logger name="org.springframework" level="info" />
 	<logger name="org.springframework.data" level="warn" />
 	<logger name="org.springframework.security" level="info" />
+	<logger name="org.springframework.jms" level="info" />
+	
 	<root level="info">
 		<appender-ref ref="console" />
 		<appender-ref ref="FILE" />

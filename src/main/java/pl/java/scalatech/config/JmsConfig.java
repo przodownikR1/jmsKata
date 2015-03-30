@@ -4,10 +4,12 @@ import javax.jms.ExceptionListener;
 import javax.jms.MessageListener;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jms.connection.CachingConnectionFactory;
@@ -28,19 +30,19 @@ public class JmsConfig {
 
     @Value("${jms.userName}")
     private String userName;
-    
+
     @Value("${jms.password}")
     private String password;
-    
+
     @Value("${jms.brokerUrl}")
     private String brokerUrl;
-    
+
     @Value("${jms.sessionCacheSize}")
     private int sessionCacheSize;
-    
+
     @Value("${jms.queueName}")
     private String queueName;
-    
+
     @Value("${jms.listenerContainer.concurrency}")
     private String listenerContainerConcurrency;
 
@@ -49,7 +51,8 @@ public class JmsConfig {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-  /*  @Bean(initMethod = "start", destroyMethod = "stop")
+    @Profile("embedded")
+    @Bean(initMethod = "start", destroyMethod = "stop")
     public BrokerService brokerService() throws Exception {
         BrokerService brokerService = new BrokerService();
         brokerService.setBrokerName("testBroker");
@@ -58,18 +61,14 @@ public class JmsConfig {
         brokerService.setEnableStatistics(true);
         brokerService.addConnector("tcp://localhost:61616");
         return brokerService;
-    }*/
+    }
 
     private ExceptionListener jmsExceptionListener() {
         return new JmsExceptionListener();
     }
 
-  
     public CachingConnectionFactory connectionFactory() {
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(userName, password, brokerUrl);
-         // activeMQConnectionFactory.setBrokerURL("tcp://localhost:61616");
-        // activeMQConnectionFactory.setUserName("admin");
-        // activeMQConnectionFactory.setPassword("password");
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(activeMQConnectionFactory);
         cachingConnectionFactory.setExceptionListener(jmsExceptionListener());
         cachingConnectionFactory.setSessionCacheSize(sessionCacheSize);
@@ -93,7 +92,7 @@ public class JmsConfig {
 
     @Bean
     public ActiveMQQueue orderQueue() {
-        return new ActiveMQQueue("queue.test");
+        return new ActiveMQQueue(queueName);
     }
 
     @Bean
@@ -114,11 +113,5 @@ public class JmsConfig {
         defaultMessageListenerContainer.setMessageListener(queueListener());
         return defaultMessageListenerContainer;
     }
-
-    /*
-     * private ConnectionFactory amqConnectionFactory() {
-     * return new ActiveMQConnectionFactory(userName, password, brokerUrl);
-     * }
-     */
 
 }
