@@ -1,7 +1,5 @@
 package pl.java.scalatech.config;
 
-import javassist.tools.framedump;
-
 import javax.jms.ExceptionListener;
 import javax.jms.MessageListener;
 
@@ -71,6 +69,9 @@ public class JmsConfig {
 
     public CachingConnectionFactory connectionFactory() {
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(userName, password, brokerUrl);
+       // activeMQConnectionFactory.setAlwaysSessionAsync(true);
+       // activeMQConnectionFactory.setAlwaysSyncSend(true);
+        
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(activeMQConnectionFactory);
         cachingConnectionFactory.setExceptionListener(jmsExceptionListener());
         cachingConnectionFactory.setSessionCacheSize(sessionCacheSize);
@@ -88,6 +89,7 @@ public class JmsConfig {
         jms.setConnectionFactory(connectionFactory());
         jms.setDefaultDestination(orderQueue());
         jms.setReceiveTimeout(100L);
+        
         jms.setSessionTransacted(true);
         return jms;
     }
