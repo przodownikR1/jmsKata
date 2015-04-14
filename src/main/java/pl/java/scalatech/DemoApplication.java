@@ -23,7 +23,6 @@ import pl.java.scalatech.config.JmsConfig;
 import pl.java.scalatech.config.ReceiveApplication;
 import pl.java.scalatech.jms.QueueListener;
 import pl.java.scalatech.jms.QueueSender;
-
 @Slf4j
 @SpringBootApplication
 public class DemoApplication {
@@ -31,6 +30,10 @@ public class DemoApplication {
     static Random rand = new Random();
     static AtomicInteger count = new AtomicInteger();
 
+    
+  
+    
+    
     public static void main(String[] args) throws InterruptedException {
         SpringApplication.run(DemoApplication.class, args);
         ApplicationContext context = new AnnotationConfigApplicationContext(JmsConfig.class);

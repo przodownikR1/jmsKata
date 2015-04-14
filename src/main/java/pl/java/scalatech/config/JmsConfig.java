@@ -14,6 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.connection.JmsTransactionManager;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.AbstractMessageListenerContainer;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
@@ -69,13 +70,14 @@ public class JmsConfig {
 
     public CachingConnectionFactory connectionFactory() {
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(userName, password, brokerUrl);
-       // activeMQConnectionFactory.setAlwaysSessionAsync(true);
-       // activeMQConnectionFactory.setAlwaysSyncSend(true);
-        
+        // activeMQConnectionFactory.setAlwaysSessionAsync(true);
+        // activeMQConnectionFactory.setAlwaysSyncSend(true);
+
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(activeMQConnectionFactory);
         cachingConnectionFactory.setExceptionListener(jmsExceptionListener());
         cachingConnectionFactory.setSessionCacheSize(sessionCacheSize);
         return cachingConnectionFactory;
+
     }
 
     @Bean
@@ -89,7 +91,7 @@ public class JmsConfig {
         jms.setConnectionFactory(connectionFactory());
         jms.setDefaultDestination(orderQueue());
         jms.setReceiveTimeout(100L);
-        
+
         jms.setSessionTransacted(true);
         return jms;
     }
@@ -98,17 +100,17 @@ public class JmsConfig {
     public ActiveMQQueue orderQueue() {
         return new ActiveMQQueue(queueName);
     }
-    
+
     @Bean
     public ActiveMQQueue mailbox() {
         return new ActiveMQQueue("mailbox");
     }
-    
 
     @Bean
     public QueueSender queueSender() {
         return new QueueSender(jmsTemplate(), queueName);
     }
+
     @Bean
     public MessageListener queueListener() {
         return new QueueListener();
@@ -121,8 +123,13 @@ public class JmsConfig {
         defaultMessageListenerContainer.setConcurrency(listenerContainerConcurrency);
         defaultMessageListenerContainer.setDestinationName(queueName);
         defaultMessageListenerContainer.setMessageListener(queueListener());
-        
+
         return defaultMessageListenerContainer;
     }
 
+    public JmsMessagingTemplate getJmsTemplate() {
+        final JmsMessagingTemplate template = new JmsMessagingTemplate(connectionFactory());
+        template.setDefaultDestination(mailbox());
+        return template;
+    }
 }
