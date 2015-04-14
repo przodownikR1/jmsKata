@@ -98,6 +98,12 @@ public class JmsConfig {
     public ActiveMQQueue orderQueue() {
         return new ActiveMQQueue(queueName);
     }
+    
+    @Bean
+    public ActiveMQQueue mailbox() {
+        return new ActiveMQQueue("mailbox");
+    }
+    
 
     @Bean
     public QueueSender queueSender() {
